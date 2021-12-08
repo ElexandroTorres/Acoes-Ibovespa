@@ -1,5 +1,8 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:acoes_ibovespa/api/hg_finance_api.dart';
+import 'package:acoes_ibovespa/model/stock.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -7,8 +10,12 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String acao = '';
+  String? stockSymbol;
   HGFinanceApi hgApi = HGFinanceApi();
+  Stock stockData = Stock();
+  String teste = '';
+  Widget mostrar = Text('Aguardando');
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +29,7 @@ class _HomePageState extends State<HomePage> {
           children: [
             TextField(
               onChanged: (value) {
-                acao = value;
+                stockSymbol = value;
               },
               keyboardType: TextInputType.name,
               decoration: InputDecoration(
@@ -31,10 +38,37 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
             TextButton(
-              onPressed: () {
-                hgApi.makeRequest(acao);
+              onPressed: () async {
+                setState(() {
+                  mostrar = Center(
+                    child: CircularProgressIndicator(
+                      color: Colors.black,
+                    ),
+                  );
+                });
+                stockData = await hgApi.makeRequest(stockSymbol);
+                setState(() {
+                  mostrar = stockInformation(stockData);
+                });
+
+                /*
+                setState(() {
+                  stockData;
+                });
+                */
               },
               child: Text('Pesquisar'),
+            ),
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                child: Card(
+                  elevation: 2,
+                  borderOnForeground: true,
+                  margin: EdgeInsets.all(16),
+                  child: mostrar,
+                ),
+              ),
             ),
           ],
         ),
@@ -42,3 +76,74 @@ class _HomePageState extends State<HomePage> {
     );
   }
 }
+
+Widget stockInformation(Stock stockData) {
+  if (stockData.symbol == '') {
+    return Text('Sem Dados');
+  } else {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        Text(
+          stockData.symbol.toString(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Colors.black,
+            fontSize: 32,
+            fontWeight: FontWeight.w700,
+          ),
+        ),
+        Text(
+          stockData.name.toString(),
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 12,
+          ),
+        ),
+        Text('company name: ${stockData.companyName}'),
+        Text(stockData.description.toString()),
+        Text('marketcap: ${stockData.marketCap}'),
+        Text('price: ${stockData.price}'),
+        Text('update at: ${stockData.updatedAt}'),
+      ],
+    );
+  }
+}
+
+
+
+/*
+child: FutureBuilder(
+                    future: hgApi.makeRequest(stockSymbol),
+                    builder: (context, snapshot) {
+                      switch (snapshot.connectionState) {
+                        case ConnectionState.waiting:
+                          return Center(
+                            child: CircularProgressIndicator(
+                              color: Colors.black,
+                            ),
+                          );
+                        default:
+                          if (snapshot.hasError) {
+                            return Center(
+                              child: Text('Digite alguma ação acima'),
+                            );
+                          } else {
+                            return Column(
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              children: [
+                                Text('symbol: ${stockData.symbol}'),
+                                Text('name: ${stockData.name}'),
+                                Text('company name: ${stockData.companyName}'),
+                                Text('Description: ${stockData.description}'),
+                                Text('marketcap: ${stockData.marketCap}'),
+                                Text('price: ${stockData.price}'),
+                                Text('update at: ${stockData.updatedAt}'),
+                              ],
+                            );
+                          }
+                      }
+                    },
+                  ),
+
+ */
