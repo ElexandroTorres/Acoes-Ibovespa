@@ -14,7 +14,7 @@ class _HomePageState extends State<HomePage> {
   HGFinanceApi hgApi = HGFinanceApi();
   late Stock stockData;
   String teste = '';
-  Widget mostrar = Text('Aguardando');
+  Widget? showInformations;
 
   @override
   Widget build(BuildContext context) {
@@ -33,16 +33,14 @@ class _HomePageState extends State<HomePage> {
               },
               keyboardType: TextInputType.name,
               decoration: InputDecoration(
-                labelText: 'Nome da ação',
+                labelText: 'Digite o simbolo da ação',
                 border: OutlineInputBorder(),
               ),
             ),
             TextButton(
               onPressed: () async {
-                hgApi.makeRequest(stockSymbol);
-                /*
                 setState(() {
-                  mostrar = Center(
+                  showInformations = Center(
                     child: CircularProgressIndicator(
                       color: Colors.black,
                     ),
@@ -50,14 +48,8 @@ class _HomePageState extends State<HomePage> {
                 });
                 stockData = await hgApi.makeRequest(stockSymbol);
                 setState(() {
-                  mostrar = stockInformation(stockData);
+                  showInformations = stockInformation(stockData);
                 });
-                */
-                /*
-                setState(() {
-                  stockData;
-                });
-                */
               },
               child: Text('Pesquisar'),
             ),
@@ -67,8 +59,8 @@ class _HomePageState extends State<HomePage> {
                 child: Card(
                   elevation: 2,
                   borderOnForeground: true,
-                  margin: EdgeInsets.all(16),
-                  child: mostrar,
+                  margin: EdgeInsets.all(4),
+                  child: showInformations,
                 ),
               ),
             ),
@@ -80,72 +72,72 @@ class _HomePageState extends State<HomePage> {
 }
 
 Widget stockInformation(Stock stockData) {
-  if (stockData.symbol == '') {
-    return Text('Sem Dados');
-  } else {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          stockData.symbol.toString(),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            color: Colors.black,
-            fontSize: 32,
-            fontWeight: FontWeight.w700,
+  return Column(
+    crossAxisAlignment: CrossAxisAlignment.stretch,
+    children: [
+      Expanded(
+        child: Container(
+          color: Colors.blue,
+          padding: EdgeInsets.only(top: 16),
+          child: Column(
+            children: [
+              Text(
+                stockData.symbol.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 32,
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Text(
+                stockData.name.toString(),
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  fontStyle: FontStyle.italic,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
           ),
         ),
-        Text(
-          stockData.name.toString(),
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 12,
+      ),
+
+      //Text('company name: ${stockData.companyName}'),
+      //Text(stockData.description.toString()),
+      //Text('marketcap: ${stockData.marketCap}'),
+      Expanded(
+        //flex: 2,
+        child: Container(
+          color: Colors.red,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                'R\$ ${stockData.price}',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 50,
+                ),
+              ),
+              Text('caiu'),
+            ],
           ),
         ),
-        Text('company name: ${stockData.companyName}'),
-        Text(stockData.description.toString()),
-        Text('marketcap: ${stockData.marketCap}'),
-        Text('price: ${stockData.price}'),
-        Text('update at: ${stockData.updatedAt}'),
-      ],
-    );
-  }
+      ),
+      Expanded(
+        child: Container(
+          //margin: EdgeInsets.all(8),
+          padding: EdgeInsets.all(16),
+          color: Colors.yellow,
+          child: Align(
+            alignment: Alignment.bottomRight,
+            child: Text('update at: ${stockData.updatedAt}'),
+          ),
+        ),
+      ),
+    ],
+  );
 }
-
-
-
-/*
-child: FutureBuilder(
-                    future: hgApi.makeRequest(stockSymbol),
-                    builder: (context, snapshot) {
-                      switch (snapshot.connectionState) {
-                        case ConnectionState.waiting:
-                          return Center(
-                            child: CircularProgressIndicator(
-                              color: Colors.black,
-                            ),
-                          );
-                        default:
-                          if (snapshot.hasError) {
-                            return Center(
-                              child: Text('Digite alguma ação acima'),
-                            );
-                          } else {
-                            return Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Text('symbol: ${stockData.symbol}'),
-                                Text('name: ${stockData.name}'),
-                                Text('company name: ${stockData.companyName}'),
-                                Text('Description: ${stockData.description}'),
-                                Text('marketcap: ${stockData.marketCap}'),
-                                Text('price: ${stockData.price}'),
-                                Text('update at: ${stockData.updatedAt}'),
-                              ],
-                            );
-                          }
-                      }
-                    },
-                  ),
-
- */

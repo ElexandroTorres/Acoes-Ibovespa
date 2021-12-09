@@ -4,9 +4,8 @@ import 'package:http/http.dart' as http;
 import 'package:acoes_ibovespa/model/stock.dart';
 
 class HGFinanceApi {
-  Future<void> makeRequest(String? stockSymbol) async {
-    //String request = '$url&symbol=$stockSymbol';
-    String request = '$url&symbol=bidi4adasdad';
+  Future<Stock> makeRequest(String? stockSymbol) async {
+    String request = '$url&symbol=$stockSymbol';
     Map<String, dynamic> stockData;
     Map<String, dynamic> stockResults;
     Stock stock;
@@ -14,23 +13,29 @@ class HGFinanceApi {
     http.Response response = await http.get(Uri.parse(request));
 
     stockData = jsonDecode(response.body);
-    stockResults = stockData['results'];
 
-    String symbol = stockResults.keys.first;
+    String symbol = stockData['results'].keys.first;
 
     // The 'error' is only avaliable when the api returns an invalid symbol json.
-    if (stockResults[symbol]['error'] != null) {
-      return;
+    if (stockData['results'][symbol]['error'] != null) {
+      stock = Stock.noData();
+      return stock;
     }
 
-    stock = Stock(
-        symbol: symbol,
-        name: stockResults[symbol]['name'],
-        companyName: stockResults[symbol]['company_name'],
-        description: stockResults[symbol]['description'],
-        marketCap: stockResults[symbol]['market_cap'],
-        price: stockResults[symbol]['price'],
-        updatedAt: stockResults[symbol]['updated_at']);
-    //return stock;
+    stockResults = stockData['results'][symbol];
+
+    stock = Stock.fromJson(stockResults);
+
+    print('Stock infos:');
+    print('symbol : ${stock.symbol}');
+    print('name: ${stock.name}');
+    print('company name : ${stock.companyName}');
+    print('description: ${stock.description}');
+    print('marketcap: ${stock.marketCap}');
+    print('price: ${stock.price}');
+    print('change percent: ${stock.changePercent}');
+    print('updatedat: ${stock.updatedAt}');
+
+    return stock;
   }
 }
