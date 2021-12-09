@@ -4,44 +4,33 @@ import 'package:http/http.dart' as http;
 import 'package:acoes_ibovespa/model/stock.dart';
 
 class HGFinanceApi {
-  Future<Stock> makeRequest(String? stockSymbol) async {
-    String request = '$url&symbol=$stockSymbol';
-    //Map stockData = {};
-    late Stock stock;
+  Future<void> makeRequest(String? stockSymbol) async {
+    //String request = '$url&symbol=$stockSymbol';
+    String request = '$url&symbol=bidi4adasdad';
+    Map<String, dynamic> stockData;
+    Map<String, dynamic> stockResults;
+    Stock stock;
 
     http.Response response = await http.get(Uri.parse(request));
-    print('chegou aki');
-    print('codigo de status: ${response.statusCode}');
-    //print(response.body);
 
-    List<dynamic> stockData = jsonDecode(response.body) as List<dynamic>;
+    stockData = jsonDecode(response.body);
+    stockResults = stockData['results'];
+
+    String symbol = stockResults.keys.first;
+
+    // The 'error' is only avaliable when the api returns an invalid symbol json.
+    if (stockResults[symbol]['error'] != null) {
+      return;
+    }
+
     stock = Stock(
-        companyName: 'a',
-        symbol: 'a',
-        updatedAt: 'a',
-        description: 'a',
-        name: 'a',
-        price: 0,
-        marketCap: 0);
-
-    print(stockData);
-    /*
-    stock = Stock(
-        symbol: stockData['results'][0]['symbol'],
-        name: stockData['results'][stockSymbol.toString().toUpperCase()]
-            ['name'],
-        companyName: stockData['results'][stockSymbol.toString().toUpperCase()]
-            ['company_name'],
-        description: stockData['results'][stockSymbol.toString().toUpperCase()]
-            ['description'],
-        marketCap: stockData['results'][stockSymbol.toString().toUpperCase()]
-            ['market_cap'],
-        price: stockData['results'][stockSymbol.toString().toUpperCase()]
-            ['price'],
-        updatedAt: stockData['results'][stockSymbol.toString().toUpperCase()]
-            ['updated_at']);
-
-    */
-    return stock;
+        symbol: symbol,
+        name: stockResults[symbol]['name'],
+        companyName: stockResults[symbol]['company_name'],
+        description: stockResults[symbol]['description'],
+        marketCap: stockResults[symbol]['market_cap'],
+        price: stockResults[symbol]['price'],
+        updatedAt: stockResults[symbol]['updated_at']);
+    //return stock;
   }
 }

@@ -12,7 +12,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String? stockSymbol;
   HGFinanceApi hgApi = HGFinanceApi();
-  Stock stockData = Stock();
+  late Stock stockData;
   String teste = '';
   Widget mostrar = Text('Aguardando');
 
@@ -39,6 +39,8 @@ class _HomePageState extends State<HomePage> {
             ),
             TextButton(
               onPressed: () async {
+                hgApi.makeRequest(stockSymbol);
+                /*
                 setState(() {
                   mostrar = Center(
                     child: CircularProgressIndicator(
@@ -50,7 +52,7 @@ class _HomePageState extends State<HomePage> {
                 setState(() {
                   mostrar = stockInformation(stockData);
                 });
-
+                */
                 /*
                 setState(() {
                   stockData;
