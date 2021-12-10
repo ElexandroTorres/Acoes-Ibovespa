@@ -57,6 +57,7 @@ class _HomePageState extends State<HomePage> {
               child: Container(
                 width: double.infinity,
                 child: Card(
+                  color: Colors.grey,
                   elevation: 2,
                   borderOnForeground: true,
                   margin: EdgeInsets.all(4),
@@ -77,9 +78,10 @@ Widget stockInformation(Stock stockData) {
     children: [
       Expanded(
         child: Container(
-          color: Colors.blue,
           padding: EdgeInsets.only(top: 16),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
                 stockData.symbol.toString(),
@@ -103,14 +105,9 @@ Widget stockInformation(Stock stockData) {
           ),
         ),
       ),
-
-      //Text('company name: ${stockData.companyName}'),
-      //Text(stockData.description.toString()),
-      //Text('marketcap: ${stockData.marketCap}'),
       Expanded(
         //flex: 2,
         child: Container(
-          color: Colors.red,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -122,7 +119,13 @@ Widget stockInformation(Stock stockData) {
                   fontSize: 50,
                 ),
               ),
-              Text('caiu'),
+              Text(
+                '${stockData.changePercent}%',
+                style: TextStyle(
+                  color:
+                      stockData.changePercent! >= 0 ? Colors.green : Colors.red,
+                ),
+              ),
             ],
           ),
         ),
@@ -131,10 +134,10 @@ Widget stockInformation(Stock stockData) {
         child: Container(
           //margin: EdgeInsets.all(8),
           padding: EdgeInsets.all(16),
-          color: Colors.yellow,
           child: Align(
             alignment: Alignment.bottomRight,
-            child: Text('update at: ${stockData.updatedAt}'),
+            child: Text(
+                'Ultima atualização as ${DateTime.parse(stockData.updatedAt.toString()).hour}:${DateTime.parse(stockData.updatedAt.toString()).minute} '),
           ),
         ),
       ),
