@@ -12,6 +12,8 @@ class HGFinanceApi {
 
     http.Response response = await http.get(Uri.parse(request));
 
+    print('response code: ${response.statusCode}');
+
     stockData = jsonDecode(response.body);
 
     String symbol = stockData['results'].keys.first;
