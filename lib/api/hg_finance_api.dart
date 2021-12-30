@@ -13,6 +13,7 @@ class HGFinanceApi {
     http.Response response = await http.get(Uri.parse(request));
 
     print('response code: ${response.statusCode}');
+    print('response: ${response.body}');
 
     stockData = jsonDecode(response.body);
 

@@ -14,8 +14,9 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   String? stockSymbol;
   HGFinanceApi hgApi = HGFinanceApi();
-  late Stock stockData;
+  Stock? stockData = null;
   String teste = '';
+
   //Widget? showInformations;
   //Widget? showInformations = stockInformation(fakeStock);
 
@@ -26,42 +27,33 @@ class _HomePageState extends State<HomePage> {
         title: Text('Ações Ibovespa'),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          children: [
-            TextField(
-              onChanged: (value) {
-                stockSymbol = value;
-              },
-              keyboardType: TextInputType.name,
-              decoration: InputDecoration(
-                labelText: 'Digite o simbolo da ação',
-                border: OutlineInputBorder(),
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(16.0),
+          child: Column(
+            children: [
+              TextField(
+                onChanged: (value) {
+                  stockSymbol = value;
+                },
+                keyboardType: TextInputType.name,
+                decoration: InputDecoration(
+                  labelText: 'Digite o simbolo da ação',
+                  border: OutlineInputBorder(),
+                ),
               ),
-            ),
-            TextButton(
-              onPressed: () async {
-                /*
-                setState(() {
-                  showInformations = Center(
-                    child: CircularProgressIndicator(
-                      color: Colors.black,
-                    ),
-                  );
-                });
-                */
-                stockData = await hgApi.makeRequest(stockSymbol);
-                setState(() {
-                  //showInformations = stockInformation(stockData);
-                });
-              },
-              child: Text('Pesquisar'),
-            ),
-            StockInformation(
-              stockData: fakeStock,
-            ),
-          ],
+              TextButton(
+                onPressed: () async {
+                  stockData = await hgApi.makeRequest(stockSymbol);
+                  setState(() {});
+                },
+                child: Text('Pesquisar'),
+              ),
+              StockInformation(
+                stockData: stockData ?? fakeStock,
+              ),
+            ],
+          ),
         ),
       ),
     );

@@ -31,10 +31,10 @@ class Stock {
   Stock.noData()
       : symbol = 'Simbolo invalido',
         name = 'Nenhnuma compania correspondente ao simbolo informado',
-        companyName = 'Companina invalida',
-        description = '',
-        marketCap = 0,
-        price = 0,
-        changePercent = 0,
-        updatedAt = '';
+        companyName = null,
+        description = null,
+        marketCap = null,
+        price = null,
+        changePercent = null,
+        updatedAt = null;
 }
