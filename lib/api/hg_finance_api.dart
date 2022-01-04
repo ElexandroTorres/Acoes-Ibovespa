@@ -24,9 +24,6 @@ class HGFinanceApi {
       state.value = ApiCallState.error;
     }
 
-    print('response code: ${response.statusCode}');
-    print('response: ${response.body}');
-
     stockData = jsonDecode(response.body);
 
     String symbol = stockData['results'].keys.first;
@@ -38,18 +35,7 @@ class HGFinanceApi {
     }
 
     stockResults = stockData['results'][symbol];
-
     stock = Stock.fromJson(stockResults);
-
-    print('Stock infos:');
-    print('symbol : ${stock.symbol}');
-    print('name: ${stock.name}');
-    print('company name : ${stock.companyName}');
-    print('description: ${stock.description}');
-    print('marketcap: ${stock.marketCap}');
-    print('price: ${stock.price}');
-    print('change percent: ${stock.changePercent}');
-    print('updatedat: ${stock.updatedAt}');
 
     return stock;
   }

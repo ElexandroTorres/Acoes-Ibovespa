@@ -44,22 +44,98 @@ class StockInformation extends StatelessWidget {
     return Icons.arrow_downward_outlined;
   }
 
+  Container get stockInfosContainer {
+    if (stockData.price == null || stockData.changePercent == null) {
+      return Container(
+        padding: EdgeInsets.all(8.0),
+        child: Text(
+          'Sem informações sobre essa ação!',
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      );
+    }
+
+    return Container(
+      padding: EdgeInsets.all(8.0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Text(
+            'R\$ ${stockData.price}',
+            textAlign: TextAlign.center,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 50,
+            ),
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                changePercentIcon,
+                color: changePercentColor,
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              Text(
+                '${stockData.changePercent}%',
+                style: TextStyle(
+                  color: changePercentColor,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                width: 8,
+              ),
+              Icon(
+                changePercentIcon,
+                color: changePercentColor,
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Container get updateTimeInfo {
+    if (stockData.updatedAt == null) {
+      return Container();
+    }
+    return Container(
+      padding: EdgeInsets.all(16),
+      child: Align(
+        alignment: Alignment.bottomRight,
+        child: Text(
+            'Ultima atualização as ${DateTime.parse(stockData.updatedAt.toString()).hour}:${DateTime.parse(stockData.updatedAt.toString()).minute} '),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(16),
-        color: Colors.blueGrey,
+        color: Color(0xFFD2D9D8),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
             padding: EdgeInsets.all(8.0),
-            margin: EdgeInsets.all(16.0),
+            margin: EdgeInsets.all(8.0),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(16),
-              color: Colors.grey,
+              color: Color(0xFFD2D9D8),
+              border: Border.all(color: Color(0xFF072B59)),
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -89,57 +165,11 @@ class StockInformation extends StatelessWidget {
               ],
             ),
           ),
-          Container(
-            padding: EdgeInsets.all(8.0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'R\$ ${stockData.price}',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 50,
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Icon(
-                      changePercentIcon,
-                      color: changePercentColor,
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Text(
-                      '${stockData.changePercent}%',
-                      style: TextStyle(
-                        color: changePercentColor,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    SizedBox(
-                      width: 8,
-                    ),
-                    Icon(
-                      changePercentIcon,
-                      color: changePercentColor,
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          Container(
-            padding: EdgeInsets.all(16),
-            child: Align(
-              alignment: Alignment.bottomRight,
-              child: Text(
-                  'Ultima atualização as ${DateTime.parse(stockData.updatedAt.toString()).hour}:${DateTime.parse(stockData.updatedAt.toString()).minute} '),
-            ),
+          Column(
+            children: [
+              stockInfosContainer,
+              updateTimeInfo,
+            ],
           ),
         ],
       ),
