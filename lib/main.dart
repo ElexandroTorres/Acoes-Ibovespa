@@ -12,8 +12,8 @@ class AcoesIbovespa extends StatelessWidget {
       title: 'Ações Ibovespa',
       theme: theme.copyWith(
         colorScheme: theme.colorScheme.copyWith(
-          primary: Colors.grey,
-          secondary: Colors.black,
+          primary: Color(0xFF072B59),
+          secondary: Color(0xFF264773),
         ),
       ),
       home: HomePage(),
